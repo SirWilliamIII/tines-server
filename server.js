@@ -2,7 +2,7 @@ const express = require('express');
 const mysql = require('mysql');
 
 const app = express();
-const port = 3000;
+const port = 8000;
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -19,7 +19,7 @@ connection.connect((err) => {
 
 app.use(express.json());
 
-app.post('/data', (req, res) => {
+app.post('/', (req, res) => {
     const { name, description } = req.body;
     const data = { name, description };
 
@@ -28,8 +28,16 @@ app.post('/data', (req, res) => {
         console.log('Success');
         res.send('Data inserted into table');
     });
-    
+
     console.log(query.sql);
+});
+
+app.get('/', (req, res) => {
+    connection.query('SELECT * FROM things', (err, rows) => {
+        if (err) throw err;
+        res.json(rows);
+    });
+
 });
 
 
